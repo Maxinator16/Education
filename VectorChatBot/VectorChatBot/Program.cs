@@ -37,7 +37,6 @@ while (true)
 }
 
 
-
 public class BotManager
 {
     private const string token = "2056632803:AAGXDzMm-5fdDdc5BWcx44vMRlyVfqJg2_M";

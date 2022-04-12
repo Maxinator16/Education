@@ -4,20 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace VectorChatBot.Commands
 {
     public class RepeatCommand : BaseCommand
     {
-        public RepeatCommand()
+        public RepeatCommand(TelegramBotClient client) : base(client)
         {
             Command = "repeat";
             Description = "repeat me";
         }
+
         public override string Command { get; }
         public override string Description { get; }
 
-        public override async void ExecuteAsync(TelegramBotClient client, string msg, long chatId)
+        private ChatMemberStatus _allowedMemberStatus = ChatMemberStatus.Member;
+        public override ChatMemberStatus AllowedMemberStatus => _allowedMemberStatus;
+
+        public override async void ExecuteAsync(string msg, long chatId)
         {
             if (string.IsNullOrEmpty(msg)) return;
 

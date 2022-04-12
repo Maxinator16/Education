@@ -9,7 +9,7 @@ namespace VectorChatBot.Commands
 {
     public class BanGroupCommand : BaseCommand
     {
-        public BanGroupCommand()
+        public BanGroupCommand(TelegramBotClient client) : base(client)
         {
             Command = "banGroup";
             Description = "BanDesc";
@@ -18,7 +18,7 @@ namespace VectorChatBot.Commands
         public override string Command { get; }
         public override string Description { get; }
 
-        public override void ExecuteAsync(TelegramBotClient client, string msg, long chatId)
+        public override void ExecuteAsync(string msg, long chatId)
         {
             throw new NotImplementedException();
         }

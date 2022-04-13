@@ -70,12 +70,19 @@ public sealed class BotManager
 
                     if (botCommand.IsCommandAvailableForMember(member) == false) continue;
 
-                    botCommand.ExecuteAsync(fUpdt.Message.Text.Substring(fEnt.Offset + fEnt.Length), fUpdt.Message.Chat.Id);
+                    try
+                    {
+                        botCommand.ExecuteAsync(fUpdt.Message.Text.Substring(fEnt.Offset + fEnt.Length), fUpdt.Message.Chat.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine(ex.Message);
+                    }
                 }
             }
         }
     }
 
-    
+
 }
 

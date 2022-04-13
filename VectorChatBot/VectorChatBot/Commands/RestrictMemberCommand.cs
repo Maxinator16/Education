@@ -20,7 +20,7 @@ namespace VectorChatBot.Commands
         private const string timeKey = "-t";
         public override string Command { get; }
         public override string Description { get; }
-        private ChatMemberStatus _allowedMemberStatus = ChatMemberStatus.Member;
+        private ChatMemberStatus _allowedMemberStatus = ChatMemberStatus.Administrator;
         public override ChatMemberStatus AllowedMemberStatus => _allowedMemberStatus;
 
         private ChatPermissions restrictSetting = new ChatPermissions()
@@ -41,7 +41,7 @@ namespace VectorChatBot.Commands
 
             var timeIndex = msg.LastIndexOf(timeKey);
             if (timeIndex == -1) return;
-            
+
             var strMember = msg.Substring(0, timeIndex);
             var strTime = msg.Substring(timeIndex + timeKey.Length, msg.Length - timeIndex - timeKey.Length);
 
@@ -51,7 +51,7 @@ namespace VectorChatBot.Commands
 
             var member = VectorChatBot.Registries.ChatMemberRegistry.GetMemberByName(chatId, strMember);
             if (member == null) return;
-          
+
             var chat = new Telegram.Bot.Types.ChatId(chatId);
             await client.RestrictChatMemberAsync(chat, member.User.Id, restrictSetting, dateUntil);
         }

@@ -2,8 +2,8 @@
 using Telegram.Bot.Types;
 
 namespace VectorChatBot.Commands
-{
-    public abstract class BaseCommand
+{  
+    public abstract class BaseCommand 
     {
         public BaseCommand(TelegramBotClient client)
         {

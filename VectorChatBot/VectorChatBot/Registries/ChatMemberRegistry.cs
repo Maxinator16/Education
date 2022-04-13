@@ -59,7 +59,7 @@ namespace VectorChatBot.Registries
             return member;
         }
 
-        private static string getNormalizeUserName(string firstName, string lastName) => string.Create(System.Globalization.CultureInfo.InvariantCulture,$"{firstName.ToLower()}{lastName.ToLower()}");
+        private static string getNormalizeUserName(string firstName, string lastName) => string.Create(System.Globalization.CultureInfo.InvariantCulture,$"{firstName.ToLower()}{lastName?.ToLower()}");
         
         public static ChatMember? GetMemberByName(long chatId, string memberName)
         {

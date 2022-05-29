@@ -18,6 +18,7 @@ namespace VectorChatBot.Registries
 
         private static TelegramBotClient client { get; set; }
 
+        private static bool IsAdminsUpdated = false;
         private static readonly ConcurrentDictionary<long, ConcurrentDictionary<long, ChatMember>> ChatAdministrators = new ConcurrentDictionary<long, ConcurrentDictionary<long, ChatMember>>();
         private static readonly ConcurrentDictionary<long, ConcurrentDictionary<long, ChatMember>> Members = new ConcurrentDictionary<long, ConcurrentDictionary<long, ChatMember>>();
 
@@ -36,11 +37,18 @@ namespace VectorChatBot.Registries
                 var admins = await client.GetChatAdministratorsAsync(update.Message.Chat.Id);
                 ChatAdministrators[update.Message.Chat.Id] = new ConcurrentDictionary<long, ChatMember>(admins.ToDictionary(f => f.User.Id, f => f));
             }
+
+            IsAdminsUpdated = true;
         }
 
         //TODO: Обновлять как? При изменении статуса Мебера необходимо менять флаг UpdateRequired = true. Как обновлять, если статус мембера был обновлён вручную? так же необходим фоновый процесс.
         public static async Task<ChatMember?> GetMember(Update update)
         {
+            if (!IsAdminsUpdated) updateAdmins(update);
+
+            if (ChatAdministrators.ContainsKey(update.Message.Chat.Id) && ChatAdministrators[update.Message.Chat.Id].ContainsKey(update.Message.From.Id))
+                return ChatAdministrators[update.Message.Chat.Id][update.Message.From.Id];
+
             if (update.Message == null || update.Message.From == null) return null;
             if (Members.ContainsKey(update.Message.Chat.Id) && Members[update.Message.Chat.Id].ContainsKey(update.Message.From.Id))
                 return Members[update.Message.Chat.Id][update.Message.From.Id];
@@ -61,7 +69,7 @@ namespace VectorChatBot.Registries
 
         private static string getNormalizeUserName(string firstName, string lastName) => string.Create(System.Globalization.CultureInfo.InvariantCulture,$"{firstName.ToLower()}{lastName?.ToLower()}");
         
-        public static ChatMember? GetMemberByName(long chatId, string memberName)
+        public static ChatMember? TryGetMemberByName(long chatId, string memberName)
         {
             if (string.IsNullOrEmpty(memberName)) throw new ArgumentNullException(nameof(memberName));
             memberName = memberName.RemoveWhitespace().ToLower();

@@ -35,7 +35,7 @@ namespace VectorChatBot.Commands
             CanPinMessages = false,
         };
 
-        public override async void ExecuteAsync(string msg, long chatId)
+        public override async void ExecuteAsync(string msg, long chatId, MessageEntity[] messageEntities)
         {
             if (string.IsNullOrEmpty(msg)) return;
 
@@ -47,13 +47,31 @@ namespace VectorChatBot.Commands
 
             if (int.TryParse(strTime, out var intTime) == false) return;
 
-            var dateUntil = DateTime.UtcNow.AddSeconds(intTime);
+            var dateUntil = DateTime.UtcNow.AddMinutes(intTime);
 
-            var member = VectorChatBot.Registries.ChatMemberRegistry.GetMemberByName(chatId, strMember);
-            if (member == null) return;
+            var member = VectorChatBot.Registries.ChatMemberRegistry.TryGetMemberByName(chatId, strMember);
+            if (member == null && messageEntities.Length == 1) return;
 
             var chat = new Telegram.Bot.Types.ChatId(chatId);
-            await client.RestrictChatMemberAsync(chat, member.User.Id, restrictSetting, dateUntil);
+
+            if (member != null)
+            {
+                await client.RestrictChatMemberAsync(chat, member.User.Id, restrictSetting, dateUntil);
+            }
+
+            for (int i = 1; i < messageEntities.Length; i++)
+            {
+                if (messageEntities[i].Type == MessageEntityType.TextMention && messageEntities[i].User != null)
+                {
+                    try
+                    {
+                        await client.RestrictChatMemberAsync(chat, messageEntities[i].User.Id, restrictSetting, dateUntil);
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex); }
+                }
+            }
+
+            
         }
     }
 }

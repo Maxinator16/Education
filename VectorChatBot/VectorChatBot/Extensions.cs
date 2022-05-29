@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace VectorChatBot
 {
@@ -255,28 +251,6 @@ namespace VectorChatBot
             {
                 action(item);
             }
-        }
-
-        public static TSource MaxBy<TSource, TValue>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TValue> selector)
-        {
-            using var iter = source.GetEnumerator();
-            if (!iter.MoveNext())
-                throw new InvalidOperationException("Empty sequence");
-            var max = selector(iter.Current);
-            var item = iter.Current;
-            var comparer = Comparer<TValue>.Default;
-            while (iter.MoveNext())
-            {
-                var tmp = selector(iter.Current);
-                if (comparer.Compare(max, tmp) < 0)
-                {
-                    item = iter.Current;
-                    max = tmp;
-                }
-            }
-            return item;
         }
     }
 }      

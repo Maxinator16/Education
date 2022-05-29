@@ -17,7 +17,7 @@ namespace VectorChatBot.Commands
         public virtual Telegram.Bot.Types.Enums.ChatMemberStatus AllowedMemberStatus { get; } = Telegram.Bot.Types.Enums.ChatMemberStatus.Administrator;
         public abstract string Command { get; }
         public abstract string Description { get; }
-        public abstract void ExecuteAsync(string msg, long chatId);
+        public abstract void ExecuteAsync(string msg, long chatId , MessageEntity[] messageEntity);
 
         public bool IsCommandAvailableForMember(ChatMember member)
         {

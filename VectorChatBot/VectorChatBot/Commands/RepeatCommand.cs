@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace VectorChatBot.Commands
@@ -22,7 +23,7 @@ namespace VectorChatBot.Commands
         private ChatMemberStatus _allowedMemberStatus = ChatMemberStatus.Member;
         public override ChatMemberStatus AllowedMemberStatus => _allowedMemberStatus;
 
-        public override async void ExecuteAsync(string msg, long chatId)
+        public override async void ExecuteAsync(string msg, long chatId, MessageEntity[] messageEntities)
         {
             if (string.IsNullOrEmpty(msg)) return;
 
